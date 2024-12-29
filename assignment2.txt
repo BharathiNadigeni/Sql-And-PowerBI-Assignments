@@ -1,0 +1,105 @@
+
+1. select c.countryname, co.continent 
+from continents co 
+left join countries c on co.contid = c.continent 
+order by co.continent;
+
+2. select co.continent, count(c.countryname) 
+from continents co 
+left join countries c on co.contid = c.continent 
+group by co.continent 
+order by co.continent;
+
+3. select c.countryid, c.countryname 
+from countries c 
+left join car_makers cm on c.countryid = cm.country 
+where cm.country is null 
+order by c.countryid, c.countryname;
+
+4. select cm.maker, cm.fullname, c.countryname 
+from car_makers cm 
+left join countries c on cm.country = c.countryid 
+where c.countryname = 'japan' 
+order by cm.maker, cm.fullname;
+
+5. select cm.maker, cm.fullname, c.countryname 
+from car_makers cm
+left join countries c on cm.country = c.countryid 
+where c.countryname = 'france' or c.countryname = 'usa' 
+order by c.countryname;
+
+6. select c.countryname, co.continent, cm.maker 
+from countries c join continents co on c.continent = co.contid 
+join car_makers cm on c.countryid = cm.country 
+where cm.maker = 'volvo' 
+order by c.countryname, co.continent;
+
+7. select md.model, cm.maker, cm.fullname 
+from model_details md 
+join car_makers cm on md.maker = cm.id
+where cm.fullname = 'Ford Motor Company' 
+order by md.model;
+
+8. select c.CountryName, count(md.model) 
+from countries c 
+left join car_makers cm on c.CountryID = cm.Country 
+left join model_details md on cm.ID = md.Maker
+ where c.CountryName = 'germany' 
+group by c.CountryName;
+
+9. select cm.maker, cm.fullname, md.model, c.CountryName 
+from car_makers cm left join countries c on c.CountryID = cm.Country 
+left join model_details md on cm.ID = md.Maker
+ where c.CountryName = 'japan' 
+order by cm.maker;
+
+10. select co.continent, cs.countryname, cm.fullname, md.model, cd.mpg, cd.cylinders, cd.edispl, cd.horsepower, cd.weight, cd.accel
+from car_details cd
+join car_names cn on cd.id = cn.id
+join model_details md on cn.model = md.modelid
+join car_makers cm on md.maker = cm.id
+join countries cs on cm.country = cs.countryid
+join continents co on cs.continent = co.contid
+where 
+    cd.mpg = (select max(mpg) from car_details) 
+    or cd.mpg = (select min(mpg) from car_details)
+order by co.continent, cs.countryname, cm.fullname, md.model;
+
+
+11. select year, count(*) 
+from car_details 
+group by year 
+having count(*) = (select max(count(*)) from car_details group by year) 
+order by count(*) desc;
+
+12. select year, count(*) 
+from car_details 
+group by year
+having count(*) = (select min(count(*)) from car_details group by year) 
+order by count(*) desc;
+
+
+13. select year,
+      min(mpg), max(mpg), avg(mpg), min(cylinders), max(cylinders), avg(cylinders), min(edispl), max(edispl), avg(edispl), min(horsepower), max(horsepower),            avg(horsepower), min(weight), max(weight), avg(weight), min(accel), max(accel), avg(accel) 
+ from car_details 
+ group by year;
+
+
+14. select avg(horsepower), median(horsepower), stddev(horsepower), avg(weight), median(weight), stddev(weight), avg(accel), median(accel), stddev(accel) from car_details;
+
+- Horsepower: The mean (105.08) is higher than the median (95), which means most cars have lower horsepower, but a few powerful cars increase the average. The high standard deviation (38.77) shows that there's a lot of variation in horsepower among the cars.
+
+- Weight: The mean (2979.41) is higher than the median (2822.5), suggesting that some heavy cars are pushing the average weight up. The large standard deviation (847.00) means there is a wide range of car weights, with both light and heavy cars in the data.
+
+Interpretation:
+Mean: Reflects the average value. 
+a higher mean indicates powerful engines (horsepower) or heavy cars (weight).
+Median: The middle value.
+ a difference between mean and median suggests skewed data.
+Standard Deviation: Measures variability. 
+a high value indicates a wide range of horsepower or weight values.
+
+
+
+
+
